@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "729221675168",
+    "project_id": "food-share-ddc78",
+    "storage_bucket": "food-share-ddc78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729221675168:android:97039196428a8f910c31c5",
+        "android_client_info": {
+          "package_name": "com.example.food_share"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9R1ySaDGkYnwJT1XjtAYw0HAip_recrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
