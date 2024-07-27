@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/3.22.0",
+  "dart.flutterSdkPath": ".fvm/versions/3.22.2",
   "dart.sdkPath": null,
   "dart.addSdkToTerminalPath": false,
   "yaml.schemaStore.enable": false

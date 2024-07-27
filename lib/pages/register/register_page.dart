@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_share/core/translations/locale_keys.g.dart';
 import 'package:food_share/pages/register/bloc/register_bloc.dart';
+import 'package:food_share/repositories/auth_repository/auth_repository.dart';
 import 'package:food_share/router.gr.dart';
 import 'package:food_share/utils/utils.dart';
 
@@ -17,7 +18,7 @@ class RegisterPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider<RegisterBloc>(
-      create: (context) => RegisterBloc(),
+      create: (context) => RegisterBloc(authRepo: context.read<AuthRepo>()),
       child: this,
     );
   }
@@ -28,75 +29,44 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String dropdownValue = 'Option 1';
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordRepeatController = TextEditingController();
-  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordRepeatController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _orgNameController = TextEditingController();
 
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode passwordFocus = FocusNode();
-  final FocusNode passwordRepeatFocus = FocusNode();
-  final FocusNode fullNameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+  final FocusNode _passwordRepeatFocus = FocusNode();
+  final FocusNode _fullNameFocus = FocusNode();
+  final FocusNode _orgNameFocus = FocusNode();
+  final FocusNode _addressFocus = FocusNode();
+
+  UserType? _selectedUserType;
+  bool _termsAccepted = false;
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    passwordRepeatController.dispose();
-    fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _passwordRepeatController.dispose();
+    _fullNameController.dispose();
+    _orgNameController.dispose();
+    _addressController.dispose();
 
-    emailFocus.dispose();
-    passwordFocus.dispose();
-    passwordRepeatFocus.dispose();
-    fullNameFocus.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+    _passwordRepeatFocus.dispose();
+    _fullNameFocus.dispose();
+    _orgNameFocus.dispose();
+    _addressFocus.dispose();
 
     super.dispose();
   }
 
-  void _showDropdown(BuildContext context, GlobalKey key) async {
-    FocusManager.instance.primaryFocus?.unfocus();
-
-    final RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    UserType? selected = await showMenu(
-      constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width - 48),
-      context: context,
-      position: RelativeRect.fromLTRB(
-        offset.dx,
-        offset.dy + size.height,
-        offset.dx + size.width,
-        0,
-      ),
-      items: [
-        PopupMenuItem<UserType>(
-          value: UserType.charity,
-          child: Text(LocaleKeys.charity.tr()),
-          onTap: () {
-            context.read<RegisterBloc>().add(const RegisterEvent.userTypeChanged(UserType.charity));
-            passwordFocus.requestFocus();
-          },
-        ),
-        PopupMenuItem<UserType>(
-          value: UserType.donor,
-          child: Text(LocaleKeys.donor.tr()),
-          onTap: () {
-            context.read<RegisterBloc>().add(const RegisterEvent.userTypeChanged(UserType.donor));
-            passwordFocus.requestFocus();
-          },
-        ),
-      ],
-      elevation: 8.0,
-    );
-
-    if (selected != null) {}
-  }
-
   @override
   Widget build(BuildContext context) {
-    GlobalKey key = GlobalKey();
-
     return BlocConsumer<RegisterBloc, RegisterState>(
       listener: (context, state) {
         switch (state.status) {
@@ -115,190 +85,243 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context, state) {
         return SafeArea(
           child: Scaffold(
-            body: Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0).copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Image.asset(
-                          'assets/icons/logo.png',
-                          fit: BoxFit.contain,
-                          height: 43,
-                        ),
+            bottomNavigationBar: BottomAppBar(
+              child: FilledButton(
+                onPressed: !state.isLoading && _termsAccepted
+                    ? () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          context.read<RegisterBloc>().add(RegisterEvent.register(
+                                email: _emailController.text,
+                                fullName: _fullNameController.text,
+                                orgName: _orgNameController.text,
+                                address: _addressController.text,
+                                userType: _selectedUserType!,
+                                password: _passwordController.text,
+                              ));
+                        }
+                      }
+                    : null,
+                child: !state.isLoading
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(LocaleKeys.signUp.tr()),
+                          const SizedBox(width: 4.0),
+                          const Icon(Icons.arrow_right_alt_rounded),
+                        ],
+                      )
+                    : const SizedBox(
+                        height: 22,
+                        width: 22,
+                        child: CircularProgressIndicator(),
                       ),
-                      const SizedBox(height: 32.0),
-                      Text(
-                        LocaleKeys.signUp.tr(),
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        LocaleKeys.signInToContinue.tr(),
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).dividerColor),
-                      ),
-                      const SizedBox(height: 32.0),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              controller: emailController,
-                              focusNode: emailFocus,
-                              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                              enabled: !state.isLoading,
-                              onChanged: (email) => context.read<RegisterBloc>().add(RegisterEvent.emailChanged(email)),
-                              decoration: const InputDecoration(hintText: 'Email'),
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              validator: (value) {
-                                final emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView(
+                children: [
+                  const SizedBox(height: 32.0),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/icons/logo.png',
+                      fit: BoxFit.contain,
+                      height: 43,
+                    ),
+                  ),
+                  const SizedBox(height: 32.0),
+                  Text(
+                    LocaleKeys.signUp.tr(),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    LocaleKeys.signInToContinue.tr(),
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).dividerColor),
+                  ),
+                  const SizedBox(height: 32.0),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _emailController,
+                          focusNode: _emailFocus,
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          enabled: !state.isLoading,
+                          decoration: const InputDecoration(hintText: 'Email'),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          onFieldSubmitted: (value) => _fullNameFocus.requestFocus(),
+                          validator: (value) {
+                            final emailRegex = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
 
-                                if (value == null || value.isEmpty) {
-                                  return LocaleKeys.emailIsRequired.tr();
-                                } else if (!emailRegex.hasMatch(value)) {
-                                  return LocaleKeys.enterAValidEmailAddress.tr();
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 12.0),
-                            TextFormField(
-                              controller: fullNameController,
-                              focusNode: fullNameFocus,
-                              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                              enabled: !state.isLoading,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              onChanged: (name) => context.read<RegisterBloc>().add(RegisterEvent.nameChanged(name)),
-                              decoration: InputDecoration(hintText: LocaleKeys.organizationName.tr()),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return LocaleKeys.organizationNameIsRequired.tr();
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 12.0),
-                            GestureDetector(
-                              key: key,
-                              onTap: () => _showDropdown(context, key),
-                              child: Container(
-                                height: 53,
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(horizontal: 24),
-                                decoration: BoxDecoration(
-                                  color: Colors.teal.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(state.userType == null ? LocaleKeys.organizationType.tr() : state.userType!.name),
-                                    const Icon(Icons.arrow_drop_down_outlined),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
-                            TextFormField(
-                              controller: passwordController,
-                              focusNode: passwordFocus,
-                              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                              enabled: !state.isLoading,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              obscureText: true,
-                              onChanged: (pass) => context.read<RegisterBloc>().add(RegisterEvent.passwordChanged(pass)),
-                              decoration: InputDecoration(
-                                hintText: LocaleKeys.password.tr(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return LocaleKeys.passwordIsRequired.tr();
-                                } else if (value.length < 8) {
-                                  return LocaleKeys.passwordMustBeAtLeast8CharactersLong.tr();
-                                } else if (!RegExp(r'^(?=.*?[A-Z])').hasMatch(value)) {
-                                  return LocaleKeys.passwordMustHaveAtLeastOneUppercaseLetter.tr();
-                                } else if (!RegExp(r'^(?=.*?[a-z])').hasMatch(value)) {
-                                  return LocaleKeys.passwordMustHaveAtLeastOneLowercaseLetter.tr();
-                                } else if (!RegExp(r'^(?=.*?[0-9])').hasMatch(value)) {
-                                  return LocaleKeys.passwordMustHaveAtLeastOneNumber.tr();
-                                } else if (!RegExp(r'^(?=.*?[!@#\$&*~])').hasMatch(value)) {
-                                  return LocaleKeys.passwordMustHaveAtLeastOneSpecialCharacter.tr();
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 12.0),
-                            TextFormField(
-                              onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                              controller: passwordRepeatController,
-                              focusNode: passwordRepeatFocus,
-                              enabled: !state.isLoading,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              obscureText: true,
-                              onChanged: (pass) => context.read<RegisterBloc>().add(RegisterEvent.repeatPasswordChanged(pass)),
-                              decoration: InputDecoration(hintText: LocaleKeys.repeatPassword.tr()),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return LocaleKeys.confirmPasswordIsRequired.tr();
-                                } else if (value != passwordController.text) {
-                                  return LocaleKeys.passwordsDoNotMatch.tr();
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.emailIsRequired.tr();
+                            } else if (!emailRegex.hasMatch(value)) {
+                              return LocaleKeys.enterAValidEmailAddress.tr();
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 24.0),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: SizedBox(
-                          width: 140,
-                          height: 43,
-                          child: FilledButton(
-                            onPressed: !state.isLoading
-                                ? () {
-                                    if (_formKey.currentState?.validate() ?? false) {
-                                      context.read<RegisterBloc>().add(const RegisterEvent.register());
-                                    }
-                                  }
-                                : null,
-                            child: !state.isLoading
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(LocaleKeys.signUp.tr()),
-                                      const SizedBox(width: 4.0),
-                                      const Icon(Icons.arrow_right_alt_rounded),
-                                    ],
-                                  )
-                                : const SizedBox(
-                                    height: 22,
-                                    width: 22,
-                                    child: CircularProgressIndicator(),
-                                  ),
+                        const SizedBox(height: 12.0),
+                        TextFormField(
+                          controller: _fullNameController,
+                          focusNode: _fullNameFocus,
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          enabled: !state.isLoading,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(hintText: 'Full Name'),
+                          onFieldSubmitted: (value) => _orgNameFocus.requestFocus(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.organizationNameIsRequired.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12.0),
+                        TextFormField(
+                          controller: _orgNameController,
+                          focusNode: _orgNameFocus,
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          enabled: !state.isLoading,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: InputDecoration(hintText: LocaleKeys.organizationName.tr()),
+                          onFieldSubmitted: (_) => _addressFocus.requestFocus(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.organizationNameIsRequired.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12.0),
+                        TextFormField(
+                          controller: _addressController,
+                          focusNode: _addressFocus,
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          enabled: !state.isLoading,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: const InputDecoration(hintText: 'Full address'),
+                          onFieldSubmitted: (_) => {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.organizationNameIsRequired.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12.0),
+                        DropdownButtonFormField<UserType>(
+                          value: _selectedUserType,
+                          items: UserType.values.map((UserType type) {
+                            return DropdownMenuItem<UserType>(
+                              value: type,
+                              child: Text(type.name.tr()),
+                            );
+                          }).toList(),
+                          decoration: InputDecoration(
+                            enabled: !state.isLoading,
+                            labelText: LocaleKeys.userType.tr(),
+                            hintText: LocaleKeys.selectUserType.tr(),
+                            alignLabelWithHint: true,
                           ),
+                          onChanged: (UserType? newValue) {
+                            setState(() {
+                              _selectedUserType = newValue;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return LocaleKeys.pleaseSelectUserType.tr();
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 24.0),
+                        const SizedBox(height: 12.0),
+                        TextFormField(
+                          controller: _passwordController,
+                          focusNode: _passwordFocus,
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          enabled: !state.isLoading,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          obscureText: true,
+                          decoration: InputDecoration(hintText: LocaleKeys.password.tr()),
+                          onFieldSubmitted: (_) => _passwordRepeatFocus.requestFocus(),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.passwordIsRequired.tr();
+                            } else if (value.length < 8) {
+                              return LocaleKeys.passwordMustBeAtLeast8CharactersLong.tr();
+                            } else if (!RegExp(r'^(?=.*?[A-Z])').hasMatch(value)) {
+                              return LocaleKeys.passwordMustHaveAtLeastOneUppercaseLetter.tr();
+                            } else if (!RegExp(r'^(?=.*?[a-z])').hasMatch(value)) {
+                              return LocaleKeys.passwordMustHaveAtLeastOneLowercaseLetter.tr();
+                            } else if (!RegExp(r'^(?=.*?[0-9])').hasMatch(value)) {
+                              return LocaleKeys.passwordMustHaveAtLeastOneNumber.tr();
+                            } else if (!RegExp(r'^(?=.*?[!@#\$&*~])').hasMatch(value)) {
+                              return LocaleKeys.passwordMustHaveAtLeastOneSpecialCharacter.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12.0),
+                        TextFormField(
+                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          controller: _passwordRepeatController,
+                          focusNode: _passwordRepeatFocus,
+                          enabled: !state.isLoading,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          obscureText: true,
+                          decoration: InputDecoration(hintText: LocaleKeys.repeatPassword.tr()),
+                          onFieldSubmitted: (_) => {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return LocaleKeys.confirmPasswordIsRequired.tr();
+                            } else if (value != _passwordController.text) {
+                              return LocaleKeys.passwordsDoNotMatch.tr();
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(LocaleKeys.alreadyHaveAnAccount.tr(), style: Theme.of(context).textTheme.labelMedium),
-                            const Text(" "),
-                            InkWell(
-                                onTap: !state.isLoading ? () => context.router.replace(const LoginRoute()) : null,
-                                child: Text(LocaleKeys.signIn.tr(), style: const TextStyle(color: Colors.blue))),
+                            Checkbox.adaptive(
+                              value: _termsAccepted,
+                              onChanged: (_) => setState(() => _termsAccepted = !_termsAccepted),
+                            ),
+                            const Flexible(
+                              child: Text('Accept terms and conditions'),
+                            ),
+                            const SizedBox(width: 8.0),
                           ],
                         ),
                       ),
                     ],
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(LocaleKeys.alreadyHaveAnAccount.tr(), style: Theme.of(context).textTheme.labelMedium),
+                        const Text(" "),
+                        InkWell(
+                            onTap: !state.isLoading ? () => context.router.replace(const LoginRoute()) : null,
+                            child: Text(LocaleKeys.signIn.tr(), style: const TextStyle(color: Colors.blue))),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32.0),
+                ],
               ),
             ),
           ),

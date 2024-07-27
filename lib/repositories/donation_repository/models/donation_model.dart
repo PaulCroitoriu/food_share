@@ -6,28 +6,38 @@ part 'donation_model.g.dart';
 @freezed
 class Donation with _$Donation {
   const factory Donation({
+    String? id,
     required String title,
     required String description,
     required double quantity,
-    required String unit,
-    required DonationCondition condition,
+    required Unit unit,
     required FoodType foodType,
-    required List<SuitableFor> suitableFor,
+    required DonationCondition condition,
+    required SuitableFor suitableFor,
     required String donorId,
-    required String contactInfo,
     required String pickUpLocation,
-    required String locationType,
     required DateTime pickUpTimeStart,
-    required DateTime pickUpTimeEnd,
-    required DateTime bestBeforeDate,
+    DateTime? bestBeforeDate,
     required UrgencyLevel urgency,
     required bool complianceVerified,
     List<String>? images,
     String? disclaimer,
     String? specialInstructions,
+    @Default(DonationStatus.available) DonationStatus status,
   }) = _Donation;
 
   factory Donation.fromJson(Map<String, Object?> json) => _$DonationFromJson(json);
+}
+
+enum Unit {
+  @JsonValue('kg')
+  kg,
+  @JsonValue('lb')
+  lb,
+  @JsonValue('g')
+  g,
+  @JsonValue('pcs')
+  pcs,
 }
 
 enum DonationCondition {
@@ -72,4 +82,27 @@ enum SuitableFor {
   children,
   @JsonValue('elderly')
   elderly,
+}
+
+enum DonationStatus {
+  @JsonValue('available')
+  available,
+
+  @JsonValue('pending_approval')
+  pendingApproval,
+
+  @JsonValue('claimed')
+  claimed,
+
+  @JsonValue('completed')
+  completed,
+
+  @JsonValue('rejected')
+  rejected,
+
+  @JsonValue('expired')
+  expired,
+
+  @JsonValue('cancelled')
+  cancelled,
 }

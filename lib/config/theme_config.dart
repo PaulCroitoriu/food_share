@@ -56,8 +56,7 @@ class ThemeConfig {
   static InputDecorationTheme _buildInputDecorationTheme() {
     return InputDecorationTheme(
       filled: true,
-      fillColor: Colors.teal.withOpacity(0.5),
-      contentPadding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0),
+      fillColor: Colors.teal.withOpacity(0.1),
       enabledBorder: const OutlineInputBorder(
         borderSide: BorderSide(color: Colors.transparent, width: 1),
         borderRadius: BorderRadius.all(Radius.circular(20.0)),

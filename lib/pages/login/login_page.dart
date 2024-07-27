@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,6 +37,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    if (kDebugMode) {
+      usernameController.text = 'a@test.com';
+      passwordController.text = 'Test123!';
+    }
   }
 
   @override
@@ -268,7 +273,7 @@ class AuthenticationForm extends StatelessWidget {
             const SizedBox(width: 24.0),
             Expanded(
               child: FilledButton(
-                onPressed: () => context.read<LoginCubit>().login(),
+                onPressed: () => context.read<LoginCubit>().login(email: usernameController.text, password: passwordController.text),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

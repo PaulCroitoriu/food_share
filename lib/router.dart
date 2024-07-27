@@ -9,6 +9,7 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: LoginRoute.page, initial: true),
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(path: '/add-donation', page: AddDonationRoute.page, maintainState: false),
+        AutoRoute(path: '/donation-details', page: DonationDetailsRoute.page, maintainState: false),
         AutoRoute(
           page: MainRoute.page,
           guards: [AuthGuard()],

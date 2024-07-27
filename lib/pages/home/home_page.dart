@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_share/router.gr.dart';
+import 'package:food_share/utils/utils.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             children: [
                               Container(
-                                width: 250,
+                                width: MediaQuery.of(context).size.width - 64 - 32 - 12 - 24,
                                 padding: const EdgeInsets.all(24.0),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withOpacity(0.3),
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               const SizedBox(width: 12.0),
                               Container(
-                                width: 250,
+                                width: MediaQuery.of(context).size.width - 132,
                                 padding: const EdgeInsets.all(24.0),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withOpacity(0.3),
@@ -111,7 +112,13 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   height: 52.0,
                                   child: FilledButton.icon(
-                                    onPressed: () => context.pushRoute(const AddDonationRoute()),
+                                    onPressed: () => context.pushRoute(AddDonationRoute()).then(
+                                      (value) {
+                                        if (value is bool && value) {
+                                          showInfo(context: context, message: "Successfully posted");
+                                        }
+                                      },
+                                    ),
                                     label: const Text('Add a donation'),
                                     icon: const Icon(Icons.add),
                                   ),

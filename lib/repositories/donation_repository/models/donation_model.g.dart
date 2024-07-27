@@ -8,58 +8,57 @@ part of 'donation_model.dart';
 
 _$DonationImpl _$$DonationImplFromJson(Map<String, dynamic> json) =>
     _$DonationImpl(
+      id: json['id'] as String?,
       title: json['title'] as String,
       description: json['description'] as String,
       quantity: (json['quantity'] as num).toDouble(),
-      unit: json['unit'] as String,
-      condition: $enumDecode(_$DonationConditionEnumMap, json['condition']),
+      unit: $enumDecode(_$UnitEnumMap, json['unit']),
       foodType: $enumDecode(_$FoodTypeEnumMap, json['foodType']),
-      suitableFor: (json['suitableFor'] as List<dynamic>)
-          .map((e) => $enumDecode(_$SuitableForEnumMap, e))
-          .toList(),
+      condition: $enumDecode(_$DonationConditionEnumMap, json['condition']),
+      suitableFor: $enumDecode(_$SuitableForEnumMap, json['suitableFor']),
       donorId: json['donorId'] as String,
-      contactInfo: json['contactInfo'] as String,
       pickUpLocation: json['pickUpLocation'] as String,
-      locationType: json['locationType'] as String,
       pickUpTimeStart: DateTime.parse(json['pickUpTimeStart'] as String),
-      pickUpTimeEnd: DateTime.parse(json['pickUpTimeEnd'] as String),
-      bestBeforeDate: DateTime.parse(json['bestBeforeDate'] as String),
+      bestBeforeDate: json['bestBeforeDate'] == null
+          ? null
+          : DateTime.parse(json['bestBeforeDate'] as String),
       urgency: $enumDecode(_$UrgencyLevelEnumMap, json['urgency']),
       complianceVerified: json['complianceVerified'] as bool,
       images:
           (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
       disclaimer: json['disclaimer'] as String?,
       specialInstructions: json['specialInstructions'] as String?,
+      status: $enumDecodeNullable(_$DonationStatusEnumMap, json['status']) ??
+          DonationStatus.available,
     );
 
 Map<String, dynamic> _$$DonationImplToJson(_$DonationImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'description': instance.description,
       'quantity': instance.quantity,
-      'unit': instance.unit,
-      'condition': _$DonationConditionEnumMap[instance.condition]!,
+      'unit': _$UnitEnumMap[instance.unit]!,
       'foodType': _$FoodTypeEnumMap[instance.foodType]!,
-      'suitableFor':
-          instance.suitableFor.map((e) => _$SuitableForEnumMap[e]!).toList(),
+      'condition': _$DonationConditionEnumMap[instance.condition]!,
+      'suitableFor': _$SuitableForEnumMap[instance.suitableFor]!,
       'donorId': instance.donorId,
-      'contactInfo': instance.contactInfo,
       'pickUpLocation': instance.pickUpLocation,
-      'locationType': instance.locationType,
       'pickUpTimeStart': instance.pickUpTimeStart.toIso8601String(),
-      'pickUpTimeEnd': instance.pickUpTimeEnd.toIso8601String(),
-      'bestBeforeDate': instance.bestBeforeDate.toIso8601String(),
+      'bestBeforeDate': instance.bestBeforeDate?.toIso8601String(),
       'urgency': _$UrgencyLevelEnumMap[instance.urgency]!,
       'complianceVerified': instance.complianceVerified,
       'images': instance.images,
       'disclaimer': instance.disclaimer,
       'specialInstructions': instance.specialInstructions,
+      'status': _$DonationStatusEnumMap[instance.status]!,
     };
 
-const _$DonationConditionEnumMap = {
-  DonationCondition.fresh: 'fresh',
-  DonationCondition.frozen: 'frozen',
-  DonationCondition.preserved: 'preserved',
+const _$UnitEnumMap = {
+  Unit.kg: 'kg',
+  Unit.lb: 'lb',
+  Unit.g: 'g',
+  Unit.pcs: 'pcs',
 };
 
 const _$FoodTypeEnumMap = {
@@ -68,6 +67,12 @@ const _$FoodTypeEnumMap = {
   FoodType.prepared: 'prepared',
   FoodType.unprepared: 'unprepared',
   FoodType.bakedGoods: 'bakedGoods',
+};
+
+const _$DonationConditionEnumMap = {
+  DonationCondition.fresh: 'fresh',
+  DonationCondition.frozen: 'frozen',
+  DonationCondition.preserved: 'preserved',
 };
 
 const _$SuitableForEnumMap = {
@@ -82,4 +87,14 @@ const _$UrgencyLevelEnumMap = {
   UrgencyLevel.low: 'low',
   UrgencyLevel.medium: 'medium',
   UrgencyLevel.high: 'high',
+};
+
+const _$DonationStatusEnumMap = {
+  DonationStatus.available: 'available',
+  DonationStatus.pendingApproval: 'pending_approval',
+  DonationStatus.claimed: 'claimed',
+  DonationStatus.completed: 'completed',
+  DonationStatus.rejected: 'rejected',
+  DonationStatus.expired: 'expired',
+  DonationStatus.cancelled: 'cancelled',
 };

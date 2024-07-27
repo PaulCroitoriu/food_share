@@ -8,10 +8,20 @@ class AddDonationState with _$AddDonationState {
 
   factory AddDonationState({
     required AddDonationStatus status,
+    required double quantity,
+    Unit? unit,
+    FoodType? foodType,
+    DonationCondition? donationCondition,
+    SuitableFor? suitableFor,
+    UrgencyLevel? urgencyLevel,
+    DateTime? expireDate,
     dynamic error,
   }) = _AddDonationState;
 
-  factory AddDonationState.initial() => AddDonationState(status: AddDonationStatus.init);
+  factory AddDonationState.initial() => AddDonationState(
+        status: AddDonationStatus.init,
+        quantity: 0.0,
+      );
 
   bool get isLoading => status == AddDonationStatus.loading;
 }
