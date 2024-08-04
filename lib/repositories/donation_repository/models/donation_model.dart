@@ -1,3 +1,4 @@
+import 'package:food_share/repositories/user_repository/models/user_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'donation_model.freezed.dart';
@@ -15,6 +16,7 @@ class Donation with _$Donation {
     required DonationCondition condition,
     required SuitableFor suitableFor,
     required String donorId,
+    UserModel? user,
     required String pickUpLocation,
     required DateTime pickUpTimeStart,
     DateTime? bestBeforeDate,
@@ -88,7 +90,7 @@ enum DonationStatus {
   @JsonValue('available')
   available,
 
-  @JsonValue('pending_approval')
+  @JsonValue('pendingApproval')
   pendingApproval,
 
   @JsonValue('claimed')

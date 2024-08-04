@@ -50,8 +50,8 @@ class SettingsPage extends StatelessWidget {
                           leading: Icons.notifications,
                           title: "Notifications",
                           trailing: Switch(
-                            value: state.darkTheme,
-                            onChanged: (_) => context.read<SettingsCubit>().themeChanged(),
+                            value: state.hasNotifications,
+                            onChanged: (_) => context.read<SettingsCubit>().hasNotificationsChanged(),
                           ),
                         ),
                       ],

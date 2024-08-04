@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state.status == LoginStatus.failure) {
-          showError(context: context, message: state.error);
+          showError(context: context, message: state.error.toString());
         } else if (state.status == LoginStatus.success) {
           context.replaceRoute(const HomeRoute());
         }

@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_share/config/injectable.dart';
 import 'package:food_share/pages/donations/bloc/donations_bloc.dart';
 import 'package:food_share/repositories/donation_repository/models/donation_model.dart';
+import 'package:food_share/repositories/user_repository/user_repository.dart';
 import 'package:food_share/router.gr.dart';
 
 @RoutePage()
@@ -16,7 +18,7 @@ class DonationsPage extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
-      create: (context) => DonationsBloc(auth: FirebaseAuth.instance),
+      create: (context) => DonationsBloc(auth: FirebaseAuth.instance, userRepository: getIt<UserRepository>()),
       child: this,
     );
   }
@@ -26,7 +28,6 @@ class _DonationsPageState extends State<DonationsPage> {
   @override
   void initState() {
     super.initState();
-
     context.read<DonationsBloc>().add(const DonationsEvent.getDonations());
   }
 
@@ -40,12 +41,15 @@ class _DonationsPageState extends State<DonationsPage> {
             title: const Text('Donations'),
             centerTitle: false,
           ),
-          body: ListView.builder(
-            itemCount: state.donations.length,
-            itemBuilder: (context, index) {
-              Donation donation = state.donations[index];
-              return DonationCard(donation: donation);
-            },
+          body: RefreshIndicator.adaptive(
+            onRefresh: () async => context.read<DonationsBloc>().add(const DonationsEvent.getDonations()),
+            child: ListView.builder(
+              itemCount: state.donations.length,
+              itemBuilder: (context, index) {
+                Donation donation = state.donations[index];
+                return DonationCard(donation: donation);
+              },
+            ),
           ),
         );
       },
@@ -165,18 +169,13 @@ class _DonationCardState extends State<DonationCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.donation.complianceVerified ? 'Active' : 'Taken',
-                      style: TextStyle(
-                        color: widget.donation.complianceVerified ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      _getText(widget.donation.status),
+                      style: _getTextStyle(widget.donation.status),
                     ),
                     OutlinedButton(
                       onPressed: () {
                         // Navigate to donation details page if needed
-                        context.pushRoute(DonationDetailsRoute(donation: widget.donation)).then(
-                              (value) => print(value),
-                            );
+                        context.pushRoute(DonationDetailsRoute(donation: widget.donation));
                       },
                       child: const Text('View details'),
                     ),
@@ -200,6 +199,48 @@ class _DonationCardState extends State<DonationCard> {
         return Icons.inventory;
       default:
         return Icons.help;
+    }
+  }
+
+  String _getText(DonationStatus status) {
+    switch (status) {
+      case DonationStatus.available:
+        return 'Available';
+      case DonationStatus.pendingApproval:
+        return 'Pending Approval';
+      case DonationStatus.claimed:
+        return 'Claimed';
+      case DonationStatus.completed:
+        return 'Completed';
+      case DonationStatus.rejected:
+        return 'Rejected';
+      case DonationStatus.expired:
+        return 'Expired';
+      case DonationStatus.cancelled:
+        return 'Cancelled';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  TextStyle _getTextStyle(DonationStatus status) {
+    switch (status) {
+      case DonationStatus.available:
+        return const TextStyle(color: Colors.green, fontWeight: FontWeight.bold);
+      case DonationStatus.pendingApproval:
+        return const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold);
+      case DonationStatus.claimed:
+        return const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold);
+      case DonationStatus.completed:
+        return const TextStyle(color: Colors.green, fontWeight: FontWeight.bold);
+      case DonationStatus.rejected:
+        return const TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
+      case DonationStatus.expired:
+        return const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold);
+      case DonationStatus.cancelled:
+        return const TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
+      default:
+        return const TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
     }
   }
 }

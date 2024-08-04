@@ -25,11 +25,14 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     }
   }
 
+  void hasNotificationsChanged() => emit(state.copyWith(hasNotifications: !state.hasNotifications, status: SettingsStatusEnum.initial));
+
   @override
   SettingsState? fromJson(Map<String, dynamic> json) {
     return SettingsState(
       darkTheme: json['darkTheme'],
       selectedLanguage: (json['language'] as String).toLanguageEnum(),
+      hasNotifications: json['hasNotifications'],
     );
   }
 
@@ -38,6 +41,7 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     return {
       'darkTheme': state.darkTheme,
       'language': state.selectedLanguage.name,
+      'hasNotifications': state.hasNotifications,
     };
   }
 }

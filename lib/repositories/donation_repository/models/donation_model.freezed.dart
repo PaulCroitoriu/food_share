@@ -29,6 +29,7 @@ mixin _$Donation {
   DonationCondition get condition => throw _privateConstructorUsedError;
   SuitableFor get suitableFor => throw _privateConstructorUsedError;
   String get donorId => throw _privateConstructorUsedError;
+  UserModel? get user => throw _privateConstructorUsedError;
   String get pickUpLocation => throw _privateConstructorUsedError;
   DateTime get pickUpTimeStart => throw _privateConstructorUsedError;
   DateTime? get bestBeforeDate => throw _privateConstructorUsedError;
@@ -60,6 +61,7 @@ abstract class $DonationCopyWith<$Res> {
       DonationCondition condition,
       SuitableFor suitableFor,
       String donorId,
+      UserModel? user,
       String pickUpLocation,
       DateTime pickUpTimeStart,
       DateTime? bestBeforeDate,
@@ -69,6 +71,8 @@ abstract class $DonationCopyWith<$Res> {
       String? disclaimer,
       String? specialInstructions,
       DonationStatus status});
+
+  $UserModelCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -93,6 +97,7 @@ class _$DonationCopyWithImpl<$Res, $Val extends Donation>
     Object? condition = null,
     Object? suitableFor = null,
     Object? donorId = null,
+    Object? user = freezed,
     Object? pickUpLocation = null,
     Object? pickUpTimeStart = null,
     Object? bestBeforeDate = freezed,
@@ -140,6 +145,10 @@ class _$DonationCopyWithImpl<$Res, $Val extends Donation>
           ? _value.donorId
           : donorId // ignore: cast_nullable_to_non_nullable
               as String,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
       pickUpLocation: null == pickUpLocation
           ? _value.pickUpLocation
           : pickUpLocation // ignore: cast_nullable_to_non_nullable
@@ -178,6 +187,18 @@ class _$DonationCopyWithImpl<$Res, $Val extends Donation>
               as DonationStatus,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserModelCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserModelCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -198,6 +219,7 @@ abstract class _$$DonationImplCopyWith<$Res>
       DonationCondition condition,
       SuitableFor suitableFor,
       String donorId,
+      UserModel? user,
       String pickUpLocation,
       DateTime pickUpTimeStart,
       DateTime? bestBeforeDate,
@@ -207,6 +229,9 @@ abstract class _$$DonationImplCopyWith<$Res>
       String? disclaimer,
       String? specialInstructions,
       DonationStatus status});
+
+  @override
+  $UserModelCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -229,6 +254,7 @@ class __$$DonationImplCopyWithImpl<$Res>
     Object? condition = null,
     Object? suitableFor = null,
     Object? donorId = null,
+    Object? user = freezed,
     Object? pickUpLocation = null,
     Object? pickUpTimeStart = null,
     Object? bestBeforeDate = freezed,
@@ -276,6 +302,10 @@ class __$$DonationImplCopyWithImpl<$Res>
           ? _value.donorId
           : donorId // ignore: cast_nullable_to_non_nullable
               as String,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserModel?,
       pickUpLocation: null == pickUpLocation
           ? _value.pickUpLocation
           : pickUpLocation // ignore: cast_nullable_to_non_nullable
@@ -329,6 +359,7 @@ class _$DonationImpl implements _Donation {
       required this.condition,
       required this.suitableFor,
       required this.donorId,
+      this.user,
       required this.pickUpLocation,
       required this.pickUpTimeStart,
       this.bestBeforeDate,
@@ -362,6 +393,8 @@ class _$DonationImpl implements _Donation {
   @override
   final String donorId;
   @override
+  final UserModel? user;
+  @override
   final String pickUpLocation;
   @override
   final DateTime pickUpTimeStart;
@@ -391,7 +424,7 @@ class _$DonationImpl implements _Donation {
 
   @override
   String toString() {
-    return 'Donation(id: $id, title: $title, description: $description, quantity: $quantity, unit: $unit, foodType: $foodType, condition: $condition, suitableFor: $suitableFor, donorId: $donorId, pickUpLocation: $pickUpLocation, pickUpTimeStart: $pickUpTimeStart, bestBeforeDate: $bestBeforeDate, urgency: $urgency, complianceVerified: $complianceVerified, images: $images, disclaimer: $disclaimer, specialInstructions: $specialInstructions, status: $status)';
+    return 'Donation(id: $id, title: $title, description: $description, quantity: $quantity, unit: $unit, foodType: $foodType, condition: $condition, suitableFor: $suitableFor, donorId: $donorId, user: $user, pickUpLocation: $pickUpLocation, pickUpTimeStart: $pickUpTimeStart, bestBeforeDate: $bestBeforeDate, urgency: $urgency, complianceVerified: $complianceVerified, images: $images, disclaimer: $disclaimer, specialInstructions: $specialInstructions, status: $status)';
   }
 
   @override
@@ -413,6 +446,7 @@ class _$DonationImpl implements _Donation {
             (identical(other.suitableFor, suitableFor) ||
                 other.suitableFor == suitableFor) &&
             (identical(other.donorId, donorId) || other.donorId == donorId) &&
+            (identical(other.user, user) || other.user == user) &&
             (identical(other.pickUpLocation, pickUpLocation) ||
                 other.pickUpLocation == pickUpLocation) &&
             (identical(other.pickUpTimeStart, pickUpTimeStart) ||
@@ -432,26 +466,28 @@ class _$DonationImpl implements _Donation {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      title,
-      description,
-      quantity,
-      unit,
-      foodType,
-      condition,
-      suitableFor,
-      donorId,
-      pickUpLocation,
-      pickUpTimeStart,
-      bestBeforeDate,
-      urgency,
-      complianceVerified,
-      const DeepCollectionEquality().hash(_images),
-      disclaimer,
-      specialInstructions,
-      status);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        title,
+        description,
+        quantity,
+        unit,
+        foodType,
+        condition,
+        suitableFor,
+        donorId,
+        user,
+        pickUpLocation,
+        pickUpTimeStart,
+        bestBeforeDate,
+        urgency,
+        complianceVerified,
+        const DeepCollectionEquality().hash(_images),
+        disclaimer,
+        specialInstructions,
+        status
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -478,6 +514,7 @@ abstract class _Donation implements Donation {
       required final DonationCondition condition,
       required final SuitableFor suitableFor,
       required final String donorId,
+      final UserModel? user,
       required final String pickUpLocation,
       required final DateTime pickUpTimeStart,
       final DateTime? bestBeforeDate,
@@ -509,6 +546,8 @@ abstract class _Donation implements Donation {
   SuitableFor get suitableFor;
   @override
   String get donorId;
+  @override
+  UserModel? get user;
   @override
   String get pickUpLocation;
   @override

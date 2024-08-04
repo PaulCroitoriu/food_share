@@ -31,14 +31,20 @@ class AuthRepo extends BaseAuthRepo {
 
       final user = credentials.user;
 
-      await _firebaseAuth.currentUser?.updateDisplayName(fullName);
-      _firebaseFirestore.collection('users').doc(user?.uid).set({
-        'email': email,
-        'fullName': fullName,
-        'orgName': orgName,
-        'address': address,
-        'userType': userType,
-      });
+      if (user != null) {
+        await user.updateDisplayName(fullName);
+        await _firebaseFirestore.collection('users').doc(user.uid).set({
+          'email': email,
+          'fullName': fullName,
+          'orgName': orgName,
+          'address': address,
+          'userType': userType.name.toString(),
+        });
+
+        print('User created and data written to Firestore successfully.');
+      } else {
+        print('Error: User is null after sign-up.');
+      }
 
       return user;
     } on auth.FirebaseAuthException catch (err) {

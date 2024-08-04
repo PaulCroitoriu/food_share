@@ -24,7 +24,7 @@ extension GetItInjectableX on _i1.GetIt {
       environment,
       environmentFilter,
     );
-    gh.factory<_i3.UserRepository>(() => _i3.UserRepository());
+    gh.singleton<_i3.UserRepository>(() => _i3.UserRepository());
     return this;
   }
 }

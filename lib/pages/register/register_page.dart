@@ -71,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         switch (state.status) {
           case RegisterStatus.success:
-            context.replaceRoute(const HomeRoute());
+            context.replaceRoute(const LoginRoute());
             break;
 
           case RegisterStatus.error:

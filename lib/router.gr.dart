@@ -44,10 +44,11 @@ abstract class $AppRouter extends _i10.RootStackRouter {
       final args = routeData.argsAs<DonationDetailsRouteArgs>();
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.DonationDetailsPage(
+        child: _i10.WrappedRoute(
+            child: _i2.DonationDetailsPage(
           key: args.key,
           donation: args.donation,
-        ),
+        )),
       );
     },
     DonationsRoute.name: (routeData) {
@@ -77,7 +78,7 @@ abstract class $AppRouter extends _i10.RootStackRouter {
     NotificationsRoute.name: (routeData) {
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i7.NotificationsPage(),
+        child: _i10.WrappedRoute(child: const _i7.NotificationsPage()),
       );
     },
     RegisterRoute.name: (routeData) {

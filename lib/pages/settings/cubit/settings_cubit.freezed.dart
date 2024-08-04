@@ -20,6 +20,7 @@ mixin _$SettingsState {
   SettingsStatusEnum get status => throw _privateConstructorUsedError;
   LanguagesEnum get selectedLanguage => throw _privateConstructorUsedError;
   LocationsEnum get location => throw _privateConstructorUsedError;
+  bool get hasNotifications => throw _privateConstructorUsedError;
   dynamic get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -38,6 +39,7 @@ abstract class $SettingsStateCopyWith<$Res> {
       SettingsStatusEnum status,
       LanguagesEnum selectedLanguage,
       LocationsEnum location,
+      bool hasNotifications,
       dynamic error});
 }
 
@@ -58,6 +60,7 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
     Object? status = null,
     Object? selectedLanguage = null,
     Object? location = null,
+    Object? hasNotifications = null,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -77,6 +80,10 @@ class _$SettingsStateCopyWithImpl<$Res, $Val extends SettingsState>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as LocationsEnum,
+      hasNotifications: null == hasNotifications
+          ? _value.hasNotifications
+          : hasNotifications // ignore: cast_nullable_to_non_nullable
+              as bool,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -98,6 +105,7 @@ abstract class _$$SettingsStateImplCopyWith<$Res>
       SettingsStatusEnum status,
       LanguagesEnum selectedLanguage,
       LocationsEnum location,
+      bool hasNotifications,
       dynamic error});
 }
 
@@ -116,6 +124,7 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
     Object? status = null,
     Object? selectedLanguage = null,
     Object? location = null,
+    Object? hasNotifications = null,
     Object? error = freezed,
   }) {
     return _then(_$SettingsStateImpl(
@@ -135,6 +144,10 @@ class __$$SettingsStateImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as LocationsEnum,
+      hasNotifications: null == hasNotifications
+          ? _value.hasNotifications
+          : hasNotifications // ignore: cast_nullable_to_non_nullable
+              as bool,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -151,6 +164,7 @@ class _$SettingsStateImpl implements _SettingsState {
       this.status = SettingsStatusEnum.initial,
       this.selectedLanguage = LanguagesEnum.en,
       this.location = LocationsEnum.turda,
+      required this.hasNotifications,
       this.error});
 
   @override
@@ -166,11 +180,13 @@ class _$SettingsStateImpl implements _SettingsState {
   @JsonKey()
   final LocationsEnum location;
   @override
+  final bool hasNotifications;
+  @override
   final dynamic error;
 
   @override
   String toString() {
-    return 'SettingsState(darkTheme: $darkTheme, status: $status, selectedLanguage: $selectedLanguage, location: $location, error: $error)';
+    return 'SettingsState(darkTheme: $darkTheme, status: $status, selectedLanguage: $selectedLanguage, location: $location, hasNotifications: $hasNotifications, error: $error)';
   }
 
   @override
@@ -185,12 +201,20 @@ class _$SettingsStateImpl implements _SettingsState {
                 other.selectedLanguage == selectedLanguage) &&
             (identical(other.location, location) ||
                 other.location == location) &&
+            (identical(other.hasNotifications, hasNotifications) ||
+                other.hasNotifications == hasNotifications) &&
             const DeepCollectionEquality().equals(other.error, error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, darkTheme, status,
-      selectedLanguage, location, const DeepCollectionEquality().hash(error));
+  int get hashCode => Object.hash(
+      runtimeType,
+      darkTheme,
+      status,
+      selectedLanguage,
+      location,
+      hasNotifications,
+      const DeepCollectionEquality().hash(error));
 
   @JsonKey(ignore: true)
   @override
@@ -205,6 +229,7 @@ abstract class _SettingsState implements SettingsState {
       final SettingsStatusEnum status,
       final LanguagesEnum selectedLanguage,
       final LocationsEnum location,
+      required final bool hasNotifications,
       final dynamic error}) = _$SettingsStateImpl;
 
   @override
@@ -215,6 +240,8 @@ abstract class _SettingsState implements SettingsState {
   LanguagesEnum get selectedLanguage;
   @override
   LocationsEnum get location;
+  @override
+  bool get hasNotifications;
   @override
   dynamic get error;
   @override

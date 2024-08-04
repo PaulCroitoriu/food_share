@@ -11,8 +11,9 @@ class SettingsState with _$SettingsState {
     @Default(SettingsStatusEnum.initial) SettingsStatusEnum status,
     @Default(LanguagesEnum.en) LanguagesEnum selectedLanguage,
     @Default(LocationsEnum.turda) LocationsEnum location,
+    required bool hasNotifications,
     dynamic error,
   }) = _SettingsState;
 
-  factory SettingsState.initial() => const SettingsState();
+  factory SettingsState.initial() => const SettingsState(hasNotifications: true);
 }

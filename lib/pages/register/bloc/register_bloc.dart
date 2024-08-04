@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:flutter_bloc/flutter_bloc.dart' show Bloc;
-import 'package:food_share/pages/register/extensions.dart';
 import 'package:food_share/repositories/auth_repository/auth_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

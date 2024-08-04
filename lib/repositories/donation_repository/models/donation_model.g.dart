@@ -17,6 +17,9 @@ _$DonationImpl _$$DonationImplFromJson(Map<String, dynamic> json) =>
       condition: $enumDecode(_$DonationConditionEnumMap, json['condition']),
       suitableFor: $enumDecode(_$SuitableForEnumMap, json['suitableFor']),
       donorId: json['donorId'] as String,
+      user: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       pickUpLocation: json['pickUpLocation'] as String,
       pickUpTimeStart: DateTime.parse(json['pickUpTimeStart'] as String),
       bestBeforeDate: json['bestBeforeDate'] == null
@@ -43,6 +46,7 @@ Map<String, dynamic> _$$DonationImplToJson(_$DonationImpl instance) =>
       'condition': _$DonationConditionEnumMap[instance.condition]!,
       'suitableFor': _$SuitableForEnumMap[instance.suitableFor]!,
       'donorId': instance.donorId,
+      'user': instance.user,
       'pickUpLocation': instance.pickUpLocation,
       'pickUpTimeStart': instance.pickUpTimeStart.toIso8601String(),
       'bestBeforeDate': instance.bestBeforeDate?.toIso8601String(),
@@ -91,7 +95,7 @@ const _$UrgencyLevelEnumMap = {
 
 const _$DonationStatusEnumMap = {
   DonationStatus.available: 'available',
-  DonationStatus.pendingApproval: 'pending_approval',
+  DonationStatus.pendingApproval: 'pendingApproval',
   DonationStatus.claimed: 'claimed',
   DonationStatus.completed: 'completed',
   DonationStatus.rejected: 'rejected',

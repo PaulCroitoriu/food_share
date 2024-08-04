@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_share/config/injectable.dart';
+import 'package:food_share/pages/register/bloc/register_bloc.dart';
+import 'package:food_share/repositories/user_repository/user_repository.dart';
 import 'package:food_share/router.gr.dart';
 import 'package:food_share/utils/utils.dart';
 
@@ -111,17 +114,23 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 SizedBox(
                                   height: 52.0,
-                                  child: FilledButton.icon(
-                                    onPressed: () => context.pushRoute(AddDonationRoute()).then(
-                                      (value) {
-                                        if (value is bool && value) {
-                                          showInfo(context: context, message: "Successfully posted");
-                                        }
-                                      },
-                                    ),
-                                    label: const Text('Add a donation'),
-                                    icon: const Icon(Icons.add),
-                                  ),
+                                  child: getIt<UserRepository>().user?.userType == UserType.donor
+                                      ? FilledButton.icon(
+                                          onPressed: () => context.pushRoute(AddDonationRoute()).then(
+                                            (value) {
+                                              if (value is bool && value) {
+                                                showInfo(context: context, message: "Successfully posted");
+                                              }
+                                            },
+                                          ),
+                                          label: const Text('Add a donation'),
+                                          icon: const Icon(Icons.add),
+                                        )
+                                      : FilledButton.icon(
+                                          onPressed: () => context.router.navigate(const DonationsRoute()),
+                                          label: const Text('Find a donation'),
+                                          icon: const Icon(Icons.search),
+                                        ),
                                 ),
                                 const SizedBox(width: 12.0),
                                 SizedBox(

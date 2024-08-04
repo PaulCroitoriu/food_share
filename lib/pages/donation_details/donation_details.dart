@@ -1,18 +1,35 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_share/config/injectable.dart';
 import 'package:food_share/core/translations/locale_keys.g.dart';
+import 'package:food_share/pages/donation_details/cubit/donation_details_cubit.dart';
 import 'package:food_share/repositories/donation_repository/models/donation_model.dart';
+import 'package:food_share/repositories/user_repository/user_repository.dart';
 import 'package:food_share/router.gr.dart';
 
 @RoutePage()
-class DonationDetailsPage extends StatefulWidget {
+class DonationDetailsPage extends StatefulWidget implements AutoRouteWrapper {
   final Donation donation;
 
   const DonationDetailsPage({Key? key, required this.donation}) : super(key: key);
 
   @override
   State<DonationDetailsPage> createState() => _DonationDetailsPageState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DonationDetailsCubit(
+        firestore: FirebaseFirestore.instance,
+        auth: FirebaseAuth.instance,
+      ),
+      child: this,
+    );
+  }
 }
 
 class _DonationDetailsPageState extends State<DonationDetailsPage> {
@@ -23,16 +40,25 @@ class _DonationDetailsPageState extends State<DonationDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Donation Details"),
-        actions: widget.donation.complianceVerified
+        actions: widget.donation.complianceVerified && getIt<UserRepository>().isDonor
             ? [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    context.pushRoute(AddDonationRoute()).then((_) => print("=========="));
-                  },
+                  onPressed: () => context.pushRoute(AddDonationRoute()),
                 )
               ]
-            : null,
+            : [],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: FilledButton(
+          onPressed: widget.donation.status == DonationStatus.available
+              ? () {
+                  context.read<DonationDetailsCubit>().claimDonation(widget.donation.id);
+                  context.maybePop();
+                }
+              : null,
+          child: _getButtonText(widget.donation.status),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -157,6 +183,37 @@ class _DonationDetailsPageState extends State<DonationDetailsPage> {
         ],
       ),
     );
+  }
+
+  _getButtonText(DonationStatus status) {
+    String text = '';
+
+    switch (status) {
+      case DonationStatus.available:
+        text = 'Request donation';
+        break;
+
+      case DonationStatus.cancelled:
+        text = 'Donation canceled';
+        break;
+
+      case DonationStatus.claimed:
+        text = 'Donation claimed';
+        break;
+
+      case DonationStatus.expired:
+        text = 'Donation expired';
+        break;
+
+      case DonationStatus.pendingApproval:
+        text = 'Donation is pending';
+        break;
+
+      default:
+        break;
+    }
+
+    return Text(text);
   }
 }
 
