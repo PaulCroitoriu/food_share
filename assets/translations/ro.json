@@ -88,5 +88,15 @@
 
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+
+  "personalDetails": "Detalii personale",
+  "profile": "Profil",
+  "rolesAndAccess": "Roluri și acces",
+  "notifications": "Notificări",
+  "donations": "Donații",
+  "today": "Astăzi",
+  "yesterday": "Ieri",
+  "last30Days": "Ultimele 30 de zile",
+  "other": "Altele"
 }

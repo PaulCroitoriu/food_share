@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_share/data/instances.dart';
 import 'package:food_share/repositories/donation_repository/models/donation_model.dart';
 import 'package:food_share/services/storage_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,9 +12,18 @@ part 'add_donation_state.dart';
 part 'add_donation_bloc.freezed.dart';
 
 class AddDonationBloc extends Bloc<AddDonationEvent, AddDonationState> {
-  final StorageService _storageService = StorageService();
+  final StorageService _storageService;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
-  AddDonationBloc() : super(AddDonationState.initial()) {
+  AddDonationBloc({
+    required StorageService storageService,
+    required FirebaseFirestore firestore,
+    required FirebaseAuth auth,
+  })  : _storageService = storageService,
+        _firestore = firestore,
+        _auth = auth,
+        super(AddDonationState.initial()) {
     on<AddDonationEvent>((event, emit) {});
 
     on<_PostDonation>((event, emit) async {
@@ -29,7 +39,7 @@ class AddDonationBloc extends Bloc<AddDonationEvent, AddDonationState> {
         foodType: event.foodType,
         condition: event.donationCondition,
         suitableFor: event.suitableFor,
-        donorId: auth.currentUser!.uid,
+        donorId: _auth.currentUser!.uid,
         pickUpLocation: "pickUpLocation",
         bestBeforeDate: event.expireDate,
         urgency: event.urgencyLevel,
@@ -44,7 +54,7 @@ class AddDonationBloc extends Bloc<AddDonationEvent, AddDonationState> {
           String imageUrl = await _storageService.uploadImage(image);
           imageUrls.add(imageUrl);
         }
-        await db.collection('donations').add(donation.toJson());
+        await _firestore.collection('donations').add(donation.toJson());
         emit(state.copyWith(status: AddDonationStatus.success));
       } catch (e) {
         emit(state.copyWith(status: AddDonationStatus.error, error: e));

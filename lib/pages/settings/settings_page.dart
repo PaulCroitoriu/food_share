@@ -33,17 +33,17 @@ class SettingsPage extends StatelessWidget {
               child: Column(
                 children: [
                   SettingsContainer(
-                    title: "Personal Details",
+                    title: LocaleKeys.personalDetails.tr(),
                     child: Column(
                       children: [
-                        const CustomListTile(
+                        CustomListTile(
                           leading: Icons.person_outline_sharp,
-                          title: "email@email.com",
+                          title: LocaleKeys.profile.tr(),
                         ),
-                        const CustomListTile(
+                        CustomListTile(
                             leading: Icons.lock_outline,
-                            title: "Change password",
-                            trailing: Icon(
+                            title: LocaleKeys.rolesAndAccess.tr(),
+                            trailing: const Icon(
                               Icons.chevron_right_rounded,
                             )),
                         CustomListTile(

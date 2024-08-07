@@ -88,5 +88,13 @@ abstract class  LocaleKeys {
   static const userType = 'userType';
   static const selectUserType = 'selectUserType';
   static const pleaseSelectUserType = 'pleaseSelectUserType';
+  static const personalDetails = 'personalDetails';
+  static const profile = 'profile';
+  static const rolesAndAccess = 'rolesAndAccess';
+  static const notifications = 'notifications';
+  static const donations = 'donations';
+  static const today = 'today';
+  static const yesterday = 'yesterday';
+  static const last30Days = 'last30Days';
 
 }

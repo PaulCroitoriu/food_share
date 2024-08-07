@@ -21,6 +21,7 @@ class UserRepository {
         final userData = await _firebaseFirestore.collection('users').doc(user.uid).get();
         if (userData.exists) {
           _user = UserModel.fromJson(userData.data()!);
+          await _firebaseAuth.currentUser!.updateDisplayName(_user!.fullName);
         } else {
           _user = null;
           throw Exception('User data not found');

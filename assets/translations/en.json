@@ -88,5 +88,15 @@
 
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+
+  "personalDetails": "Personal Details",
+  "profile": "Profile",
+  "rolesAndAccess": "Roles and Access",
+  "notifications": "Notifications",
+  "donations": "Donations",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "last30Days": "Last 30 Days",
+  "other": "Other"
 }

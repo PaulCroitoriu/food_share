@@ -40,13 +40,13 @@ class MainScreen extends StatelessWidget {
                     icon: const Icon(CupertinoIcons.home),
                     label: LocaleKeys.home.tr(),
                   ),
-                  const NavigationDestination(
-                    icon: Icon(CupertinoIcons.gift),
-                    label: "Donations",
+                  NavigationDestination(
+                    icon: const Icon(CupertinoIcons.gift),
+                    label: LocaleKeys.donations.tr(),
                   ),
-                  const NavigationDestination(
-                    icon: Icon(CupertinoIcons.bell),
-                    label: "Notifications",
+                  NavigationDestination(
+                    icon: const Icon(CupertinoIcons.bell),
+                    label: LocaleKeys.notifications.tr(),
                   ),
                   NavigationDestination(
                     icon: const Icon(CupertinoIcons.settings),

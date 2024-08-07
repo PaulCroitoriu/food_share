@@ -101,7 +101,16 @@ class CodegenLoader extends AssetLoader{
   "pleaseSelectAnUrgencyLevel": "Bitte wählen Sie einen Dringlichkeitsgrad aus",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Persönliche Angaben",
+  "profile": "Profil",
+  "rolesAndAccess": "Rollen und Zugriff",
+  "notifications": "Infos",
+  "donations": "Spenden",
+  "today": "Heute",
+  "yesterday": "Gestern",
+  "last30Days": "Letzten 30 Tage",
+  "other": "Andere"
 };
 static const Map<String,dynamic> en = {
   "settings": "Settings",
@@ -190,7 +199,16 @@ static const Map<String,dynamic> en = {
   "pleaseSelectAnUrgencyLevel": "Please select an urgency level",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Personal Details",
+  "profile": "Profile",
+  "rolesAndAccess": "Roles and Access",
+  "notifications": "Notifications",
+  "donations": "Donations",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "last30Days": "Last 30 Days",
+  "other": "Other"
 };
 static const Map<String,dynamic> it = {
   "settings": "Impostazioni",
@@ -279,7 +297,16 @@ static const Map<String,dynamic> it = {
   "pleaseSelectAnUrgencyLevel": "Si prega di selezionare un livello di urgenza",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Dettagli personali",
+  "profile": "Profilo",
+  "rolesAndAccess": "Ruoli e Accesso",
+  "notifications": "Notifiche",
+  "donations": "Donazioni",
+  "today": "Oggi",
+  "yesterday": "Ieri",
+  "last30Days": "Ultimi 30 giorni",
+  "other": "Altro"
 };
 static const Map<String,dynamic> fr = {
   "settings": "Paramètres",
@@ -368,7 +395,16 @@ static const Map<String,dynamic> fr = {
   "pleaseSelectAnUrgencyLevel": "Veuillez sélectionner un niveau d'urgence",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Détails personnels",
+  "profile": "Profil",
+  "rolesAndAccess": "Rôles et accès",
+  "notifications": "Notifications",
+  "donations": "Dons",
+  "today": "Aujourd'hui",
+  "yesterday": "Hier",
+  "last30Days": "Les 30 derniers jours",
+  "other": "Autre"
 };
 static const Map<String,dynamic> ro = {
   "settings": "Setări",
@@ -457,7 +493,16 @@ static const Map<String,dynamic> ro = {
   "pleaseSelectAnUrgencyLevel": "Vă rugăm să selectați un nivel de urgență",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Detalii personale",
+  "profile": "Profil",
+  "rolesAndAccess": "Roluri și acces",
+  "notifications": "Notificări",
+  "donations": "Donații",
+  "today": "Astăzi",
+  "yesterday": "Ieri",
+  "last30Days": "Ultimele 30 de zile",
+  "other": "Altele"
 };
 static const Map<String,dynamic> es = {
   "settings": "Configuraciones",
@@ -546,7 +591,16 @@ static const Map<String,dynamic> es = {
   "pleaseSelectAnUrgencyLevel": "Por favor, seleccione un nivel de urgencia",
   "userType": "User Type",
   "selectUserType": "Select user type",
-  "pleaseSelectUserType": "Please select user type"
+  "pleaseSelectUserType": "Please select user type",
+  "personalDetails": "Detalles personales",
+  "profile": "Perfil",
+  "rolesAndAccess": "Roles y Acceso",
+  "notifications": "Notificaciones",
+  "donations": "Donaciones",
+  "today": "Hoy",
+  "yesterday": "Ayer",
+  "last30Days": "Últimos 30 días",
+  "other": "Otro"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"de": de, "en": en, "it": it, "fr": fr, "ro": ro, "es": es};
 }

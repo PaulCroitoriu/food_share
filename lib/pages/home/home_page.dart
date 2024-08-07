@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                       Text(FirebaseAuth.instance.currentUser?.displayName ?? 'Paul',
                           style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4.0),
-                      Text("Make the world a better place! ", style: Theme.of(context).textTheme.labelLarge),
+                      Text("Ready to make a difference today? ", style: Theme.of(context).textTheme.labelLarge),
                     ],
                   ),
                 ],
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Text(
-                                  'You have made 3 donations last month.',
+                                  "So far, we've redistributed 12 meals this month.",
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Text(
-                                  'You have made 124 people happy last month.',
+                                  "We've impacted 3 charities. That is not a small thing.",
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 SizedBox(
                                   height: 52.0,
-                                  child: getIt<UserRepository>().user?.userType == UserType.donor
+                                  child: getIt<UserRepository>().isDonor
                                       ? FilledButton.icon(
                                           onPressed: () => context.pushRoute(AddDonationRoute()).then(
                                             (value) {

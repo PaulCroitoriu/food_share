@@ -34,6 +34,7 @@ class DonationDetailsPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _DonationDetailsPageState extends State<DonationDetailsPage> {
   int _currentPage = 0;
+  final user = getIt<UserRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +50,19 @@ class _DonationDetailsPageState extends State<DonationDetailsPage> {
               ]
             : [],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: FilledButton(
-          onPressed: widget.donation.status == DonationStatus.available
-              ? () {
-                  context.read<DonationDetailsCubit>().claimDonation(widget.donation.id);
-                  context.maybePop();
-                }
-              : null,
-          child: _getButtonText(widget.donation.status),
-        ),
-      ),
+      bottomNavigationBar: user.isDonor
+          ? null
+          : BottomAppBar(
+              child: FilledButton(
+                onPressed: widget.donation.status == DonationStatus.available
+                    ? () {
+                        context.read<DonationDetailsCubit>().claimDonation(widget.donation.id);
+                        context.maybePop();
+                      }
+                    : null,
+                child: _getButtonText(widget.donation.status),
+              ),
+            ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
